@@ -22,9 +22,17 @@ jobs:
          echo "$CUSTOM_GIT_CONFIG" > ~/.gitconfig;
          git clone https://github.com/ValluvarSploit/Domain_Monitoring.git;
          bash Domain_Monitoring/scripts/nuclei-template-scan.sh httpx-resolved-url.txt all;
+         python3 Domain_Monitoring/scripts/nuclei-sqlite.py nuclie-scan.out      
       - name: Output & Slack Notification
         if: always()
         run: |
           S_CHANNEL=$(echo $TARGET | sed 's/\./_/g');
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Nuclei-Scan -F file=@nuclie-scan.out;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
+      - name: Commit Resolvers
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add nuclei-scan.db
+          git commit -m "Update Nuclei Scan DB" -a
+          git push "https://ValluvarSploit:${{ secrets.TOKEN }}@github.com/ValluvarSploit/Test.git" HEAD:main --follow-tags   
