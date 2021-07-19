@@ -21,6 +21,12 @@ jobs:
          wget $HOST/httpx-resolved-url.txt;
          git clone https://github.com/ValluvarSploit/Domain_Monitoring.git;
          bash Domain_Monitoring/scripts/nuclei-template-scan.sh httpx-resolved-url.txt all;
+      - name: Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+         name: nuclei-artifacts
+         path: nuclie-scan.out
       - name: Output & Slack Notification
         if: always()
         run: |
@@ -30,9 +36,13 @@ jobs:
 
 # Push output to nuclei scan database
   nuclei-scan-db:
+    if: always()
+    needs: nuclei-scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+         name: nuclei-artifacts
       - name: Nuclei Scan DB
         run: |
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`Started`*_  - '$TARGET'"}' "$WEBHOOK";
