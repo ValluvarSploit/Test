@@ -1,4 +1,4 @@
-name: Nikto Scan
+name: Eyewitness Screenshot
 on:
   workflow_dispatch:
 env:
@@ -10,23 +10,21 @@ env:
       CUSTOM_GIT_CREDS : ${{ secrets.CUSTOM_GIT_CREDENTIALS }}
       CUSTOM_GIT_CONFIG : ${{ secrets.CUSTOM_GIT_CONFIG }}        
 jobs:
-  Nikto-Scan:
+  Eyewitness:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Nikto Scan
+      - name: Eyewitness Screenshot
         run: |
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`Started`*_  - '$TARGET'"}' "$WEBHOOK";
-         echo "$CUSTOM_GIT_CREDS" > ~/.git-credentials; echo "$CUSTOM_GIT_CONFIG" > ~/.gitconfig;
-         wget "$HOST"/httpx-resolved-host.txt;
+         wget $HOST/subdomain-urls-live.txt;
+         echo "$CUSTOM_GIT_CREDS" > ~/.git-credentials;
+         echo "$CUSTOM_GIT_CONFIG" > ~/.gitconfig;
          git clone https://github.com/ValluvarSploit/Domain_Monitoring.git;
-         bash Domain_Monitoring/scripts/nikto-scan.sh httpx-resolved-host.txt;
+         bash Domain_Monitoring/scripts/eyewitness.sh subdomain-urls-live.txt;      
       - name: Output & Slack Notification
         if: always()
         run: |
-          ls -la
-          mv *-nikto.out nikto-results;
-	  zip -r nikto-results.zip nikto-results/;
           S_CHANNEL=$(echo $TARGET | sed 's/\./_/g');
-          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Nikto-Scan -F file=@nikto-results.zip;
+          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Eyewitness-Screenshot -F file=@eyewitness_output.zip.xz;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
