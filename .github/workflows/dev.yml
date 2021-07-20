@@ -17,8 +17,8 @@ jobs:
       - name: Dev
         run: |
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`Started`*_  - '$TARGET'"}' "$WEBHOOK";
-         docker pull screetsec/sudomy; mkdir output;
-         docker run --rm -v "${PWD}/output:/usr/lib/sudomy/output" screetsec/sudomy -d "$TARGET" --no-probe;
+         docker pull screetsec/sudomy:v1.2.0-dev; mkdir output;
+         docker run --rm -v "${PWD}/output:/usr/lib/sudomy/output" screetsec/sudomy:v1.2.0-dev -d "$TARGET" --no-probe;
          ls -l output;
          cat output/`date +"%m-%d-%Y"`/"$TARGET"/subdomain.txt;
 #         echo "$CUSTOM_GIT_CREDS" > ~/.git-credentials; echo "$CUSTOM_GIT_CONFIG" > ~/.gitconfig;
