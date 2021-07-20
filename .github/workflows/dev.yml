@@ -17,9 +17,8 @@ jobs:
       - name: Dev
         run: |
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`Started`*_  - '$TARGET'"}' "$WEBHOOK";
-         docker pull unapibageek/ctfr;
-         docker run --rm -v "${PWD}:/tmp" unapibageek/ctfr -d "$TARGET" -o /tmp/subs.ctfr
-         ls -l;
+         wget -q https://raw.githubusercontent.com/appsecco/the-art-of-subdomain-enumeration/master/crtsh_enum_web.py;
+         python3 crtsh_enum_web.py "$TARGET" > subs.crtsh;
 #         echo "$CUSTOM_GIT_CREDS" > ~/.git-credentials; echo "$CUSTOM_GIT_CONFIG" > ~/.gitconfig;
 #         git clone https://github.com/ValluvarSploit/Domain_Monitoring.git;
 #         bash Domain_Monitoring/scripts/eyewitness.sh subdomain-urls-live.txt;      
