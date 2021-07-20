@@ -13,15 +13,21 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Dependencies
         run: |
-         echo "$TARGET" > targets.txt
-         sudo apt-get update && sudo apt-get install nikto -y
+         git clone https://github.com/codingo/Interlace; cd Interlace/                        │┌─[✗]─[valluvarsploit@parrot]─[~/bug-bounty/gitrepo/Domain_Monitoring/scripts]              
+         sudo python3 setup.py install;                                                       │└──╼ $^C
+         interlace -h;
+#         echo "$TARGET" > targets.txt
+#         sudo apt-get update && sudo apt-get install nikto -y;
+#         git clone https://github.com/codingo/Interlace; cd Interlace/
+#         sudo python3 setup.py install;
+#         interlace -h;
        #wget https://github.com/sullo/nikto/archive/master.zip ; unzip master.zip ;
-      - name: Nikto Scan
-        run: |
-         for host in $(cat targets.txt) ; do nikto -host $host >> nikto-80-output.txt; done;
-         for host in $(cat targets.txt) ; do nikto -host $host:443 >> nikto-443-output.txt; done;
-         cat nikto-80-output.txt
-         cat nikto-443-output.txt
+#      - name: Nikto Scan
+#        run: |
+#         for host in $(cat targets.txt) ; do nikto -host $host >> nikto-80-output.txt; done;
+#         for host in $(cat targets.txt) ; do nikto -host $host:443 >> nikto-443-output.txt; done;
+#         cat nikto-80-output.txt
+#         cat nikto-443-output.txt
        # cd nikto-master/program
        #for host in $(cat targets.txt) ; do perl nikto.pl -host $host >> nikto-80-output.txt; done;
        #for host in $(cat targets.txt) ; do perl nikto.pl -host $host:443 >> nikto-443-output.txt; done;
