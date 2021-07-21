@@ -727,8 +727,12 @@ jobs:
 
   URL-Enumeration:
     runs-on: ubuntu-latest
+    needs: [HTTPX]    
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+         name: httpx-artifacts
       - name: URL Enumeration
         run: |
          curl -X POST -H 'Content-type: application/json' --data '{"text":"Job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`Started`*_  - '$TARGET'"}' "$WEBHOOK";
