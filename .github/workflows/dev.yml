@@ -17,7 +17,7 @@ jobs:
       - name: Dev
         run: |
          pip install slack-cleaner
-         slack-cleaner -h
+         slack-cleaner --token "$S_TOKEN" --message --channel watch-bbp-public --user "*"
 
 
 #  Dev:
