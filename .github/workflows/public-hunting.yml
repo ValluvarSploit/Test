@@ -303,6 +303,8 @@ jobs:
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
 
 
+
+
   HTTPX-Brute:
     if: always()
     needs: DNSx-brute
@@ -332,6 +334,7 @@ jobs:
         if: always()
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
+
 
 
   Subdomain-enum:
@@ -727,7 +730,7 @@ jobs:
 
   URL-Enumeration:
     runs-on: ubuntu-latest
-    needs: [HTTPX]    
+    needs: [HTTPX, Subdomain-Takeoever]    
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
@@ -1052,4 +1055,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: Slack 
         run: |
-         curl -X POST -H 'Content-type: application/json' --data '{"text":"${{ github.workflow}} _*`COMPLETED`*_ - '$TARGET'"}' "$WEBHOOK" ;
+         curl -X POST -H 'Content-type: application/json' --data '{"text":"The Workflow ${{ github.workflow}} _*`COMPLETED`*_ - '$TARGET'"}' "$WEBHOOK" ;
