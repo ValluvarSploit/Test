@@ -7,10 +7,12 @@ env:
       AWS_CREDS: ${{ secrets.AWS_CREDENTIALS }}
       GIT_TOKEN: ${{ secrets.TOKEN }}
       S_TOKEN: ${{ secrets.SLACK_OAUTH_USER_TOKEN }}
+      S_CHANNEL: ${{ secrets.S_CHANNEL_PUBLIC}}
       WEBHOOK: ${{ secrets.WHOOK_JOB_ALERTS }}
       S_URL: https://slack.com/api/files.upload
       CUSTOM_GIT_CREDS : ${{ secrets.CUSTOM_GIT_CREDENTIALS }}
       CUSTOM_GIT_CONFIG : ${{ secrets.CUSTOM_GIT_CONFIG }}
+
 jobs:
   MassDNS-1:
     if: always()
@@ -41,6 +43,7 @@ jobs:
         if: always()
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
+
 
   MassDNS-2:
     if: always()
@@ -114,6 +117,7 @@ jobs:
         if: always()
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
+
 
   MassDNS-4:
     if: always()
@@ -189,6 +193,7 @@ jobs:
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
 
+
   MassDNS-6:
     if: always()
     runs-on: ubuntu-latest
@@ -226,6 +231,7 @@ jobs:
         if: always()
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
+
 
   MassDNS-7:
     if: always()
@@ -266,6 +272,7 @@ jobs:
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
 
+
   DNSx-brute:
     if: always()
     runs-on: ubuntu-latest
@@ -301,8 +308,6 @@ jobs:
           
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=DNSx-Brute -F file=@dnsx-brute.txt.xz;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
-
-
 
 
   HTTPX-Brute:
@@ -399,8 +404,7 @@ jobs:
           httpx-brute-resolved-url.txt.xz
       - name: Slack Notification
         if: always()
-        run: |
-          
+        run: |          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=DNSx-Normal -F file=@dnsx-normal.txt;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
 
@@ -435,11 +439,11 @@ jobs:
            ips-live.txt
       - name: Slack
         if: always()
-        run: |
-          
+        run: |          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=HTTPX-URL -F file=@httpx-resolved-url.txt;
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=HTPPX-Host -F file=@httpx-resolved-host.txt;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK" ;
+
 
 
   Subdomain-Takeoever:
@@ -459,9 +463,10 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=HTTPX -F file=@subdomain-takeover.zip;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
+
+
           
   DNSC:
     if: always()
@@ -481,7 +486,6 @@ jobs:
       - name: Send Output to Slack
         if: always()
         run: |
-         S_CHANNEL=$(echo $TARGET | sed 's/\./_/g')
          curl https://slack.com/api/files.upload -F token="$SLACK_OAUTH_TOKEN" -F channels="$S_CHANNEL" -F title=DNSC -F file=@dnsc.csv
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -504,7 +508,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=MEG-Root -F file=@meg-root.zip.xz;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -528,7 +531,6 @@ jobs:
       - name: Send Output to Slack
         if: always()
         run: |
-         
          curl https://slack.com/api/files.upload -F token="$SLACK_OAUTH_TOKEN" -F channels="$S_CHANNEL" -F title=HeartBleed-Scan -F file=@heartbleed-scan.txt;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -551,7 +553,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Aquatone -F file=@aquatone-output.zip.xz ;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -575,7 +576,6 @@ jobs:
       - name: Slack Notification
         if: always()
         run: |
-         S_CHANNEL=$(echo $TARGET | sed 's/\./_/g')
          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Web-Screenshots -F file=@eyewitness_output.zip.xz ;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -599,7 +599,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           if [[ -f gochopchop-out.json ]]; then curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=GoChopChop -F file=@gochopchop-out.json; fi;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -623,7 +622,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=S3-Scan -F file=@s3-scan.txt;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -646,11 +644,9 @@ jobs:
          bash Domain_Monitoring/scripts/whatweb.sh httpx-resolved-host.txt;
       - name: Output to Slack Notification
         if: always()
-        run: |
-         
+        run: |         
          curl https://slack.com/api/files.upload -F token="$SLACK_OAUTH_TOKEN" -F channels="$S_CHANNEL" -F title=Whatweb-Scan -F file=@whatweb-logs.json;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
-
 
 
 
@@ -672,10 +668,8 @@ jobs:
       - name: Send Output to Slack
         if: always()
         run: |
-         
          curl https://slack.com/api/files.upload -F token="$SLACK_OAUTH_TOKEN" -F channels="$S_CHANNEL" -F title=CORS-Scan -F file=@cors-scan.json;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
-
 
 
 
@@ -696,11 +690,9 @@ jobs:
          bash Domain_Monitoring/scripts/jaeles.sh httpx-resolved-url.txt;
       - name: Output & Slack Notification
         if: always()
-        run: |
-          
+        run: |          
           if [ -f jaeles.zip ]; then curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Jaeles-Signature-Scan -F file=@jaeles.zip; fi;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
-
 
 
 
@@ -722,7 +714,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Nuclei-Template-Scan -F file=@nuclie-scan.out;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -750,7 +741,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=URL-Enumeration -F file=@url-collector-artifacts.zip.xz;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -774,7 +764,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title="$TARGET"-JS-Scan -F file=@js-scan.zip.xz;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -798,7 +787,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-         
          if [[ -f secrets.zip.xz ]]; then curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Secret-Finder -F file=@secrets.zip; fi
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -827,7 +815,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-          
           curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Parameter-Discovery -F file=@paramspider.txt;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
           
@@ -850,9 +837,9 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-         S_CHANNEL=$(echo $TARGET | sed 's/\./_/g')
          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=KXSS -F file=@kxss.out;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
+
 
 
   Dirsearch-File:
@@ -872,8 +859,7 @@ jobs:
          bash Domain_Monitoring/scripts/dirsearch.sh httpx-resolved-url.txt FILE;
       - name: Output &  Slack Notification
         if: always()
-        run: |
-            
+        run: |            
          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Dirsearch-File -F file=@dirsearch-file-reports.zip.xz;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -897,7 +883,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-         
          if [[ -f xss-urls.txt ]] ; then curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Dalfox-XSS -F file=@xss-urls.txt; fi
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -921,9 +906,9 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-         
          if [[ -f xss-urls.txt ]] ; then curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Dalfox-XSS -F file=@xss-urls.txt; fi
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
+
 
 
   Nikto-Scan:
@@ -944,8 +929,7 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-         mv *-nikto.out nikto-results; zip -r nikto-results.zip nikto-results;
-         
+         mv *-nikto.out nikto-results; zip -r nikto-results.zip nikto-results;         
          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Nikto-Scan -F file=@nikto-results.zip;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -969,7 +953,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-         
          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Masscan-Nmap-Scan -F file=@mass-nmap-scan.zip;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -993,7 +976,6 @@ jobs:
       - name: Output & Slack Notification
         if: always()
         run: |
-         
          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Masscan-Nmap-Vuln-Scan -F file=@masscan-nmap-vuln-scan.zip;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -1017,7 +999,6 @@ jobs:
       - name: Output &  Slack Notification
         if: always()
         run: |
-            
          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=Dirsearch-Dir -F file=@dirsearch-dir-reports.zip.xz;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
@@ -1041,9 +1022,9 @@ jobs:
       - name: Output &  Slack Notification
         if: always()
         run: |
-            
          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=blc-light -F file=@blc-light-broken.txt;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
+
 
 
 
