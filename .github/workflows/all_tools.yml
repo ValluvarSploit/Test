@@ -8,7 +8,8 @@ env:
       WEBHOOK: ${{ secrets.WHOOK_JOB_ALERTS }}
       S_URL: https://slack.com/api/files.upload
       CUSTOM_GIT_CREDS : ${{ secrets.CUSTOM_GIT_CREDENTIALS }}
-      CUSTOM_GIT_CONFIG : ${{ secrets.CUSTOM_GIT_CONFIG }}        
+      CUSTOM_GIT_CONFIG : ${{ secrets.CUSTOM_GIT_CONFIG }} 
+      S_CHANNEL: ${{ secrets.S_CHANNEL_PUBLIC}
 jobs:
   all-by-one:
     runs-on: ubuntu-latest
@@ -17,17 +18,17 @@ jobs:
       - name: Running All Tools
         run: |
          curl -X POST -H 'Content-type: application/json' --data '{"text":"Job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`Started`*_  - '$TARGET'"}' "$WEBHOOK";
-         echo "$CUSTOM_GIT_CREDS" > ~/.git-credentials;
-         echo "$CUSTOM_GIT_CONFIG" > ~/.gitconfig;
+         echo "$CUSTOM_GIT_CREDS" > ~/.git-credentials; echo "$CUSTOM_GIT_CONFIG" > ~/.gitconfig;
+         wget "$HOST"/httpx-resolved-url.txt; 
          git clone https://github.com/ValluvarSploit/Domain_Monitoring.git;
-         bash Domain_Monitoring/scripts/gau.sh "$TARGET";  
-#         wget "$HOST"/subdomain-urls-live.txt;         
+         bash Domain_Monitoring/scripts/dirsearch.sh httpx-resolved-url.txt DIR;  
+         ls -la
       - name: Output & Slack Notification
         if: always()
         run: |
-          S_CHANNEL=$(echo $TARGET | sed 's/\./_/g');
-          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=GAU -F file=@gau.txt.xz;
+          curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=dirsesarch -F file=@dirsearch-dir-reports.zip.xz;
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
+        # S_CHANNEL=$(echo $TARGET | sed 's/\./_/g'); 
 
 
 # Robots Waybackurls: bash Domain_Monitoring/scripts/robots-txt-waybackurl.sh "$TARGET"  => robots.waybackurl.xz
