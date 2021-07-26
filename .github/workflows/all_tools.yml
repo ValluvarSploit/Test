@@ -9,7 +9,8 @@ env:
       S_URL: https://slack.com/api/files.upload
       CUSTOM_GIT_CREDS : ${{ secrets.CUSTOM_GIT_CREDENTIALS }}
       CUSTOM_GIT_CONFIG : ${{ secrets.CUSTOM_GIT_CONFIG }} 
-      S_CHANNEL: ${{ secrets.S_CHANNEL_PUBLIC}
+      S_CHANNEL: ${{ secrets.S_CHANNEL_PUBLIC}}
+      
 jobs:
   all-by-one:
     runs-on: ubuntu-latest
