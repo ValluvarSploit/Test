@@ -18,7 +18,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2 
+      - uses: actions/checkout@v2 0
       - name: MassDNS
         run: |
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job ${{ github.job}} in workflow ${{ github.workflow }} has _*`Started`*_  - '$TARGET'"}' "$WEBHOOK";
@@ -669,7 +669,7 @@ jobs:
       - name: Send Output to Slack
         if: always()
         run: |
-         curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=CORS-Scan-F file=@cors-scan.json;
+         curl "$S_URL" -F token="$S_TOKEN" -F channels="$S_CHANNEL" -F title=CORS-Scan -F file=@cors-scan.json;
          curl -X POST -H 'Content-type: application/json' --data '{"text":"The job *${{ github.job}}* in workflow *${{ github.workflow }}* has _*`${{ job.status }}`*_  - '$TARGET'"}' "$WEBHOOK";
 
 
